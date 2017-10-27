@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<link rel="stylesheet" href="">
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script>
+	  var socket = io();
+	</script>
+</head>
+<body>
+    <style>
+        .container {
+            width: 800px;
+            margin: 200px auto;
+        }
+        .window {
+            border: 1px solid rgb(195, 195, 195);
+            width: 600px;
+            height: 400px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
+            -moz-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
+            box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
+            text-align: left;
+            vertical-align: top;
+            margin: 0 20px;
+            animation: zoom 500ms;
+            -webkit-animation: zoom 500ms;
+        }
+
+        .browser .header {
+            background: #E8E8E8;
+            border-radius: 4px 4px 0 0;
+            padding-bottom: 3px;
+            line-height: 30px;
+            vertical-align: top;
+            padding: 2px 10px 5px;
+        }
+
+        .window .bullet {
+            height: 11px;
+            width: 11px;
+            display: inline-block;
+            background: #ccc;
+            border-radius: 100%;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .window .bullet-red {
+            background: #DF7065;
+        }
+
+        .window .bullet-yellow {
+            background: #E6BB46;
+        }
+
+        .window .bullet-green {
+            background: #5BCC8B;
+        }
+
+        .browser .header .title {
+            background: #fff;
+            display: inline-block;
+            width: 320px;
+            border-radius: 4px;
+            padding: 6px 14px 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .window .header .title {
+            font: 11px "Myriad Pro", "Arial";
+        }
+
+        .scheme {
+            color: #7ED321;
+        }
+
+        .browser .body {
+            padding: 16px;
+            font: 11px "Lucida Grande", "Open Sans";
+        }
+
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        .browser .tweets {
+            margin: 0;
+            height: 150px;
+            overflow-y: auto;
+        }
+
+        .main-window {
+            width: 100%;
+            height: 250px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .login {
+            width: 200px;
+            margin: 0 auto;
+            line-height: 200px;
+        }
+
+        .login .login-input {
+            height: 40px;
+            border: none;
+            outline: none;
+            background: transparent;
+            font: 18px "Myriad Pro", "Arial";
+            border-bottom: 1px solid gray;
+        }
+
+        .chat-container {
+            display: none;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+
+        .message-input-container {
+            width: 100%;
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            background: #E8E8E8;
+            padding: 8px 20px 6px;
+            box-sizing: border-box;
+        }
+        
+        .message-input {
+            font: 11px "Myriad Pro", "Arial";
+            width: 60%;
+            border-radius: 4px;
+            padding: 6px 15px 4px;
+            border: none;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .username-container {
+            font: 11px "Myriad Pro", "Arial";
+            color: #7ED321;
+            margin-right: 10px;
+        }
+
+        .messages {
+            overflow: auto;
+            height: 80%;
+        }
+
+        .chat-container .messages .username {
+            padding-right: 5px;
+        }
+
+        .chat-container .messages .message {
+            padding: 5px;
+        }
+
+        .chat-container .messages .date-message {
+            padding: 5px;
+            color: #E8E8E8;
+            font: 11px "Myriad Pro", "Arial";
+            float: right;
+        }
+
+    </style>
+    <div class="container">
+        <div class="window browser fading">
+            <div class="header">
+                <span class="bullet bullet-red"></span>
+                <span class="bullet bullet-yellow"></span>
+                <span class="bullet bullet-green"></span>
+                <span class="title"><span class="scheme">https://</span>hell-inc.com/chat</span>
+            </div>
+            <div class="body">
+                <p>Welcome to the <b>Hell.Inc</b> chat <b>MOTHERFUCKER</b></p>
+                <div class="main-window">
+                    <div class="login">
+                        <input type="text" class="login-input" placeholder="Nickname..">
+                    </div>
+                    <div class="chat-container">
+                            <div class="messages"></div>
+                            <div class="message-input-container">
+                                <span class="username-container"></span>
+                                <input type="text" class="message-input" placeholder="Your message here">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<script>
+        var socket = io('http://localhost:3000');
+        var username;
+        var connected = false;
+        var typing = false;
+
+        var FADE_TIME = 150;
+        var TYPING_TIMER_LENGTH = 400;
+
+        var COLORS = [
+            '#e21400', '#91580f', '#f8a700', '#f78b00',
+            '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+            '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+        ];
+
+        $window = $(window);
+        $usernameInput = $('.login-input');
+        $currentInput = $usernameInput.focus();
+        $loginPage = $('.login');
+        $chatPage = $('.chat-container');
+        $inputMessage = $('.message-input');
+        $messages = $('.messages');
+
+        function cleanInput (input) {
+            return $('<div/>').text(input).html();
+        }
+
+        function addParticipantsMessage (data) {
+            console.log("there are " + data.numUsers + " participants");
+        }
+
+        function setUsername () {
+            username = cleanInput($usernameInput.val().trim());
+
+            if (username) {
+                $loginPage.fadeOut();
+                $chatPage.show();
+                $loginPage.off('click');
+                $currentInput = $inputMessage.focus();
+
+                socket.emit('add user', username);
+            }
+        }
+
+        function sendMessage () {
+            var message = $inputMessage.val();
+            message = cleanInput(message);
+            if (message && connected) {
+                $inputMessage.val('');
+
+                addChatMessage({
+                    username: username,
+                    message: message
+                });
+
+                socket.emit('new message', message);
+            }
+        }
+
+        function getTypingMessages (data) {
+            return $('.typing.message').filter(function (i) {
+                return $(this).data('username') === data.username;
+            });
+        }
+
+        function getUsernameColor (username) {
+            var hash = 7;
+            for (var i = 0; i < username.length; i++) {
+                hash = username.charCodeAt(i) + (hash << 5) - hash;
+            }
+            var index = Math.abs(hash % COLORS.length);
+            return COLORS[index];
+        }
+
+        function addMessageElement (el, options) {
+            var $el = $(el);
+
+            if (!options) {
+                options = {};
+            }
+            if (typeof options.fade === 'undefined') {
+                options.fade = true;
+            }
+            if (typeof options.prepend === 'undefined') {
+                options.prepend = false;
+            }
+
+            if (options.fade) {
+                $el.hide().fadeIn(FADE_TIME);
+            }
+            if (options.prepend) {
+                $messages.prepend($el);
+            } else {
+                $messages.append($el);
+            }
+            $messages[0].scrollTop = $messages[0].scrollHeight;
+        }
+
+        function addChatTyping (data) {
+            data.typing = true;
+            data.message = 'is typing';
+            addChatMessage(data);
+        }
+
+        function removeChatTyping (data) {
+            getTypingMessages(data).fadeOut(function () {
+                $(this).remove();
+            });
+        }
+
+        function addChatMessage (data, options) {
+
+            var $typingMessages = getTypingMessages(data);
+            
+            options = options || {};
+            if ($typingMessages.length !== 0) {
+                options.fade = false;
+                $typingMessages.remove();
+            }
+
+            var $usernameDiv = $('<span class="username"/>')
+            .text(data.username + ':')
+            .css('color', getUsernameColor(data.username));
+            var $messageBodyDiv = $('<span class="messageBody">')
+            .text(data.message);
+
+            var dateBodyContainer = $('<span class="date-message"/>')
+            var date = new Date();
+            dateBodyContainer.html(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
+            var typingClass = data.typing ? 'typing' : '';
+            var $messageDiv = $('<div class="message"/>')
+            .data('username', data.username)
+            .addClass(typingClass)
+            .append($usernameDiv, $messageBodyDiv, dateBodyContainer);
+
+            addMessageElement($messageDiv, options);
+        }
+
+        function updateTyping() {
+            if (connected) {
+            if (!typing) {
+                typing = true;
+                socket.emit('typing');
+            }
+            lastTypingTime = (new Date()).getTime();
+
+            setTimeout(function () {
+                var typingTimer = (new Date()).getTime();
+                var timeDiff = typingTimer - lastTypingTime;
+
+                if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
+                    socket.emit('stop typing');
+                    typing = false;
+                }
+            }, TYPING_TIMER_LENGTH);
+            }
+        }
+        
+        $window.keydown(function (event) {
+            if (!(event.ctrlKey || event.metaKey || event.altKey)) {
+                $currentInput.focus();
+            }
+
+            if (event.which === 13) {
+                if (username) {
+                    sendMessage();
+                    socket.emit('stop typing');
+                    typing = false;
+                } else {
+                    setUsername();
+                }
+            }
+        });
+
+        $inputMessage.on('input', function() {
+            updateTyping();
+        });
+
+        socket.on('typing', function (data) {
+            addChatTyping(data);
+        });
+
+        socket.on('stop typing', function (data) {
+            removeChatTyping(data);
+        });
+
+        socket.on('login', function (data) {
+            connected = true;
+            var message = "Welcome to Hell.Inc Chat – ";
+            console.log(message, {
+                prepend: true
+            });
+            $('.username-container').html(username + ':')
+            addParticipantsMessage(data);
+        });
+        
+        socket.on('user joined', function (data) {
+            console.log(data.username + ' joined');
+            addParticipantsMessage(data);
+          });
+        
+        socket.on('new message', function (data) {
+            if(data.username == username) return
+            addChatMessage(data);
+        });
+
+	</script>
+</body>
+</html>
