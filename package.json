@@ -6,17 +6,35 @@
   "author": "SWalker",
   "license": "MIT",
   "scripts": {
-    "start": "pm2 start index.js --interpreter node_modules/babel-cli/bin/babel-node.js --name 'koa'"
+    "start": "pm2 start index.js --interpreter node_modules/babel-cli/bin/babel-node.js --name 'koa'",
+    "launch": "nodemon index --exec babel-node",
+    "clear": "lsof -i TCP:3000 | grep LISTEN | awk '{print $2}' | xargs kill -9"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
     "koa": "^2.3.0",
+    "koa-passport": "^4.0.1",
     "koa-router": "^7.2.1",
     "koa-send": "^4.1.1",
+    "koa-session": "^5.5.0",
     "koa-socket": "^4.4.0",
-    "pm2": "^2.7.2"
+    "koa-static": "^4.0.1",
+    "node-sass": "^4.5.3",
+    "passport-facebook": "^2.1.1",
+    "pm2": "^2.7.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "sass-loader": "^6.0.6",
+    "socket.io": "^2.0.4",
+    "style-loader": "^0.19.0",
+    "webpack": "^3.8.1",
+    "ws": "^3.2.0"
   }
 }
