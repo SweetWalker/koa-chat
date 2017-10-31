@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 import MessageItem from "./MessageItem";
+import TypingList from "./TypingList"
 
-// window.socket = io('http://localhost:3000');
 
 export default class Chat extends Component {
     constructor(){
@@ -21,7 +21,8 @@ export default class Chat extends Component {
                 '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
             ],
             inputMesssage: "",
-            messages: []
+            messages: [],
+            listTyping: []
         };
 
         this.socket = io('http://localhost:3000'),
@@ -31,13 +32,11 @@ export default class Chat extends Component {
     setSocket = () => {
         let self = this;
         this.socket.on('typing', function (data) {
-            // addChatTyping(data);
-            console.log("typing");
+            self.addChatTyping(data);
         });
 
         this.socket.on('stop typing', function (data) {
-            // removeChatTyping(data);
-            console.log("stop typing");
+            self.removeChatTyping(data);
         });
 
         this.socket.on('login', function (data) {
@@ -61,6 +60,23 @@ export default class Chat extends Component {
         });
     }
 
+    addChatTyping(name){
+        // console.log("typing: ", name);
+        let isExistInList = this.state.listTyping.filter(item => item === name).length;
+        if(isExistInList){
+            return;
+        }
+        let list = this.state.listTyping;
+        list.push(name);
+        this.setState({ listTyping: list});
+    }
+
+    removeChatTyping(name){
+        // console.log("stop typing: ", name);
+        let list = this.state.listTyping.filter(item => item !== name);
+        this.setState({ listTyping: list});
+    }
+
     newMessage = (data) => {
         console.log(data);
         let date = new Date();
@@ -69,7 +85,7 @@ export default class Chat extends Component {
             photo: data.userData.photo,
             text: data.message,
             date: date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-        }
+        };
         let list = this.state.messages;
         list.push(item);
         this.setState({ messages: list});
@@ -86,7 +102,7 @@ export default class Chat extends Component {
                 }
             }
             this.socket.emit('new message', data);
-            this.socket.emit('stop typing');
+            this.socket.emit('stop typing', this.state.userName);
             console.log("sent Message: ", data);
             this.setState({inputMesssage: ""});
         }
@@ -94,16 +110,20 @@ export default class Chat extends Component {
 
     onChangeInput = (e) => {
         let self = this;
-            this.setState({inputMesssage: e.target.value, typingDate: new Date()});
-            this.socket.emit('typing');
-            setTimeout(self.onTypingOff, 3000);
+        this.setState({inputMesssage: e.target.value, typingDate: new Date()});
+        this.onTypingOn();
+        setTimeout(self.onTypingOff, 3000);
+    }
+
+    onTypingOn = () => {
+        this.socket.emit('typing', this.state.userName);
     }
 
     onTypingOff = () => {
-        if(this.state.typingDate - new Date() < 3000){
+        if(new Date() - this.state.typingDate < 3000){
             return;
         }
-        this.socket.emit('stop typing');
+        this.socket.emit('stop typing', this.state.userName);
     }
 
     getUserData = () => {
@@ -143,7 +163,10 @@ export default class Chat extends Component {
                             <div className="chat-container">
                                 <div className="messages">
 
-        {this.state.messages.length && this.state.messages.map((item, index)=><MessageItem key={index} item={item}/>)}
+        {this.state.messages.length && this.state.messages.map((item, index)=><MessageItem key={index} item={item}/>) || null}
+
+        {this.state.listTyping.length && <TypingList list={this.state.listTyping} /> || null}
+        {/*{this.state.listTyping.length && this.state.listTyping.map((item, index)=><MessageItem key={index} item={item}/>)}*/}
 
                                 </div>
                                 <div className="message-input-container">

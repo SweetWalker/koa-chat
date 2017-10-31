@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default (data) => {
-    console.log(data.item);
+    // console.log(data.item);
     let item = data.item;
     return(
         <div className="message">

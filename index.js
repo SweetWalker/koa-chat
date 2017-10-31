@@ -90,7 +90,7 @@ router
             // ctx.body = `<h1 style='font-size: 8vh;margin-top:30vh;text-align:center'> <img src="${photo}" alt=""> ${name}</h1>`;
             await send(ctx, './templete/chat.html');
         } else {
-            // ctx.redirect('/');
+            ctx.redirect('/');
         }
 
     })
@@ -139,16 +139,18 @@ io.on('new message', (ctx, data) => {
     io.broadcast('new message', data);
 });
 
-io.on('typing', (ctx) => {
-    io.broadcast('typing', {
-        userData: SavedUserData[ctx.socket.id]
-    });
+io.on('typing', (ctx, userData) => {
+    io.broadcast('typing',
+        // userData: SavedUserData[ctx.socket.id]
+        userData
+    );
 });
     
-io.on('stop typing', (ctx) => {
-    io.broadcast('stop typing', {
-        userData: SavedUserData[ctx.socket.id]
-    });
+io.on('stop typing', (ctx, userData) => {
+    io.broadcast('stop typing',
+        // userData: SavedUserData[ctx.socket.id]
+        userData
+    );
 });
 
 io.on('disconnect', (ctx) => {

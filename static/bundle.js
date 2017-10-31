@@ -578,6 +578,21 @@ module.exports = invariant;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = __webpack_require__(37);
+} else {
+  module.exports = __webpack_require__(38);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global) {/**
  * Module dependencies.
  */
@@ -1186,21 +1201,6 @@ exports.decodePayloadAsBinary = function (data, binaryType, callback) {
 };
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(37);
-} else {
-  module.exports = __webpack_require__(38);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
 /* 7 */
@@ -2199,7 +2199,7 @@ module.exports = function (opts) {
  * Module dependencies.
  */
 
-var parser = __webpack_require__(5);
+var parser = __webpack_require__(6);
 var Emitter = __webpack_require__(19);
 
 /**
@@ -3528,7 +3528,7 @@ function polling (opts) {
 
 var Transport = __webpack_require__(18);
 var parseqs = __webpack_require__(10);
-var parser = __webpack_require__(5);
+var parser = __webpack_require__(6);
 var inherit = __webpack_require__(11);
 var yeast = __webpack_require__(30);
 var debug = __webpack_require__(2)('engine.io-client:polling');
@@ -4347,7 +4347,7 @@ module.exports = function(obj, fn){
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(36);
-module.exports = __webpack_require__(80);
+module.exports = __webpack_require__(81);
 
 
 /***/ }),
@@ -4357,7 +4357,7 @@ module.exports = __webpack_require__(80);
 "use strict";
 
 
-var _react = __webpack_require__(6);
+var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -6168,7 +6168,7 @@ if (process.env.NODE_ENV === 'production') {
  LICENSE file in the root directory of this source tree.
  Modernizr 3.0.0pre (Custom Build) | MIT
 */
-var aa=__webpack_require__(6);__webpack_require__(4);var l=__webpack_require__(14),n=__webpack_require__(7),ba=__webpack_require__(20),ca=__webpack_require__(3),da=__webpack_require__(8),ea=__webpack_require__(21),fa=__webpack_require__(22),ha=__webpack_require__(23),ia=__webpack_require__(24);
+var aa=__webpack_require__(5);__webpack_require__(4);var l=__webpack_require__(14),n=__webpack_require__(7),ba=__webpack_require__(20),ca=__webpack_require__(3),da=__webpack_require__(8),ea=__webpack_require__(21),fa=__webpack_require__(22),ha=__webpack_require__(23),ia=__webpack_require__(24);
 function w(a){for(var b=arguments.length-1,c="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,d=0;d<b;d++)c+="\x26args[]\x3d"+encodeURIComponent(arguments[d+1]);b=Error(c+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}aa?void 0:w("227");
 function ja(a){switch(a){case "svg":return"http://www.w3.org/2000/svg";case "math":return"http://www.w3.org/1998/Math/MathML";default:return"http://www.w3.org/1999/xhtml"}}
 var ka={Namespaces:{html:"http://www.w3.org/1999/xhtml",mathml:"http://www.w3.org/1998/Math/MathML",svg:"http://www.w3.org/2000/svg"},getIntrinsicNamespace:ja,getChildNamespace:function(a,b){return null==a||"http://www.w3.org/1999/xhtml"===a?ja(b):"http://www.w3.org/2000/svg"===a&&"foreignObject"===b?"http://www.w3.org/1999/xhtml":a}},la=null,oa={};
@@ -6493,7 +6493,7 @@ if (process.env.NODE_ENV !== "production") {
 
 'use strict';
 
-var react = __webpack_require__(6);
+var react = __webpack_require__(5);
 var invariant = __webpack_require__(4);
 var ExecutionEnvironment = __webpack_require__(14);
 var _assign = __webpack_require__(7);
@@ -24583,7 +24583,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = __webpack_require__(6);
+var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -24595,6 +24595,10 @@ var _MessageItem = __webpack_require__(79);
 
 var _MessageItem2 = _interopRequireDefault(_MessageItem);
 
+var _TypingList = __webpack_require__(80);
+
+var _TypingList2 = _interopRequireDefault(_TypingList);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24602,8 +24606,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-// window.socket = io('http://localhost:3000');
 
 var Chat = function (_Component) {
     _inherits(Chat, _Component);
@@ -24616,13 +24618,11 @@ var Chat = function (_Component) {
         _this.setSocket = function () {
             var self = _this;
             _this.socket.on('typing', function (data) {
-                // addChatTyping(data);
-                console.log("typing");
+                self.addChatTyping(data);
             });
 
             _this.socket.on('stop typing', function (data) {
-                // removeChatTyping(data);
-                console.log("stop typing");
+                self.removeChatTyping(data);
             });
 
             _this.socket.on('login', function (data) {
@@ -24671,7 +24671,7 @@ var Chat = function (_Component) {
                     }
                 };
                 _this.socket.emit('new message', data);
-                _this.socket.emit('stop typing');
+                _this.socket.emit('stop typing', _this.state.userName);
                 console.log("sent Message: ", data);
                 _this.setState({ inputMesssage: "" });
             }
@@ -24680,15 +24680,19 @@ var Chat = function (_Component) {
         _this.onChangeInput = function (e) {
             var self = _this;
             _this.setState({ inputMesssage: e.target.value, typingDate: new Date() });
-            _this.socket.emit('typing');
+            _this.onTypingOn();
             setTimeout(self.onTypingOff, 3000);
         };
 
+        _this.onTypingOn = function () {
+            _this.socket.emit('typing', _this.state.userName);
+        };
+
         _this.onTypingOff = function () {
-            if (_this.state.typingDate - new Date() < 3000) {
+            if (new Date() - _this.state.typingDate < 3000) {
                 return;
             }
-            _this.socket.emit('stop typing');
+            _this.socket.emit('stop typing', _this.state.userName);
         };
 
         _this.getUserData = function () {
@@ -24720,7 +24724,8 @@ var Chat = function (_Component) {
             TYPING_TIMER_LENGTH: 400,
             COLORS: ['#e21400', '#91580f', '#f8a700', '#f78b00', '#58dc00', '#287b00', '#a8f07a', '#4ae8c4', '#3b88eb', '#3824aa', '#a700ff', '#d300e7'],
             inputMesssage: "",
-            messages: []
+            messages: [],
+            listTyping: []
         };
 
         _this.socket = (0, _socket2.default)('http://localhost:3000'), _this.getUserData();
@@ -24728,6 +24733,29 @@ var Chat = function (_Component) {
     }
 
     _createClass(Chat, [{
+        key: 'addChatTyping',
+        value: function addChatTyping(name) {
+            // console.log("typing: ", name);
+            var isExistInList = this.state.listTyping.filter(function (item) {
+                return item === name;
+            }).length;
+            if (isExistInList) {
+                return;
+            }
+            var list = this.state.listTyping;
+            list.push(name);
+            this.setState({ listTyping: list });
+        }
+    }, {
+        key: 'removeChatTyping',
+        value: function removeChatTyping(name) {
+            // console.log("stop typing: ", name);
+            var list = this.state.listTyping.filter(function (item) {
+                return item !== name;
+            });
+            this.setState({ listTyping: list });
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -24787,7 +24815,8 @@ var Chat = function (_Component) {
                                     { className: 'messages' },
                                     this.state.messages.length && this.state.messages.map(function (item, index) {
                                         return _react2.default.createElement(_MessageItem2.default, { key: index, item: item });
-                                    })
+                                    }) || null,
+                                    this.state.listTyping.length && _react2.default.createElement(_TypingList2.default, { list: this.state.listTyping }) || null
                                 ),
                                 _react2.default.createElement(
                                     'div',
@@ -25595,7 +25624,7 @@ module.exports = __webpack_require__(63);
  * @api public
  *
  */
-module.exports.parser = __webpack_require__(5);
+module.exports.parser = __webpack_require__(6);
 
 
 /***/ }),
@@ -25610,7 +25639,7 @@ var transports = __webpack_require__(28);
 var Emitter = __webpack_require__(19);
 var debug = __webpack_require__(2)('engine.io-client:socket');
 var index = __webpack_require__(31);
-var parser = __webpack_require__(5);
+var parser = __webpack_require__(6);
 var parseuri = __webpack_require__(76);
 var parseqs = __webpack_require__(10);
 
@@ -25747,7 +25776,7 @@ Socket.protocol = parser.protocol; // this is an int
 Socket.Socket = Socket;
 Socket.Transport = __webpack_require__(18);
 Socket.transports = __webpack_require__(28);
-Socket.parser = __webpack_require__(5);
+Socket.parser = __webpack_require__(6);
 
 /**
  * Creates transport of the given type.
@@ -27597,7 +27626,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
  */
 
 var Transport = __webpack_require__(18);
-var parser = __webpack_require__(5);
+var parser = __webpack_require__(6);
 var parseqs = __webpack_require__(10);
 var inherit = __webpack_require__(11);
 var yeast = __webpack_require__(30);
@@ -28053,14 +28082,14 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _react = __webpack_require__(6);
+var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (data) {
-    console.log(data.item);
+    // console.log(data.item);
     var item = data.item;
     return _react2.default.createElement(
         "div",
@@ -28092,6 +28121,45 @@ exports.default = function (data) {
 
 /***/ }),
 /* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(5);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (props) {
+    console.log(props);
+    // let item = data.item;
+    return _react2.default.createElement(
+        "div",
+        { className: "typing" },
+        _react2.default.createElement(
+            "span",
+            { className: "typing-title" },
+            "Typing..."
+        ),
+        props.list.map(function (item, index) {
+            return _react2.default.createElement(
+                "span",
+                { className: "typing-name", key: index },
+                item,
+                " "
+            );
+        })
+    );
+};
+
+/***/ }),
+/* 81 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
