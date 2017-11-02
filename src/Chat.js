@@ -11,6 +11,7 @@ export default class Chat extends Component {
         this.state = {
             userName: "Not name",
             photo: "",
+            link: "",
             connected: false,
             typing: false,
             FADE_TIME: 150,
@@ -22,14 +23,12 @@ export default class Chat extends Component {
             ],
             inputMesssage: "",
             messages: [],
-            listTyping: []
+            listTyping: [],
+            countPeople: 0
         };
 
         this.socket = io('http://localhost:3000');
-
         this.socket.on("connect", () => this.getUserData() );
-
-
     }
 
     setSocket = () => {
@@ -54,6 +53,7 @@ export default class Chat extends Component {
 
         this.socket.on('user joined', function (data) {
             console.log(data.userData.userName + ' joined');
+            self.setState({countPeople: data.numUsers})
             // addParticipantsMessage(data);
         });
 
@@ -64,12 +64,7 @@ export default class Chat extends Component {
     }
 
     addChatTyping(name){
-        // console.log("typing: ", name);
-        if(name === this.state.userName){
-            return;
-        }
-        let isExistInList = this.state.listTyping.filter(item => item === name).length;
-        if(isExistInList){
+        if(name === this.state.userName || this.state.listTyping.filter(item => item === name).length){
             return;
         }
         let list = this.state.listTyping;
@@ -78,13 +73,12 @@ export default class Chat extends Component {
     }
 
     removeChatTyping(name){
-        // console.log("stop typing: ", name);
         let list = this.state.listTyping.filter(item => item !== name);
         this.setState({ listTyping: list});
     }
 
     newMessage = (data) => {
-        console.log(data);
+        // console.log(data);
         let date = new Date();
         let item = {
             name: data.userData.userName || "not name",
@@ -141,8 +135,8 @@ export default class Chat extends Component {
 
         fetch("/userData",options)
             .then(data => data.json())
-            .then(data => {
-                let userData = {userName: data.name, photo: data.photo};
+            .then(userData => {
+                // let userData = {userName: data.name, photo: data.photo};
                 self.setState(userData);
                 self.setSocket();
                 self.socket.emit('add user', userData);
@@ -163,6 +157,7 @@ export default class Chat extends Component {
                             <span className="bullet bullet-green"></span>
                         </a>
                         <span className="title"><span className="scheme">https://</span>hell-inc.com/chat</span>
+                        <div className="countpeople">{this.state.countPeople}</div>
                     </div>
                     <div className="body">
                         <p>Welcome to the <b>Hell.Inc</b> chat <b>MOTHERFUCKER</b></p>
@@ -176,8 +171,10 @@ export default class Chat extends Component {
 
                                 </div>
                                 <div className="message-input-container">
-                                    {this.state.photo && <img src={this.state.photo} className="username-photo" />}
-                                    <span className="username-container">{this.state.userName}</span>
+                                    <a className="username-link" href={this.state.link}>
+                                        {this.state.photo && <img src={this.state.photo} className="username-photo" />}
+                                        <span className="username-container">{this.state.userName}</span>
+                                    </a>
                                     <input type="text"
                                            className="message-input"
                                            placeholder="Your message here"

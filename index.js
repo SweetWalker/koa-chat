@@ -37,9 +37,10 @@ passport.use(new FacebookStrategy({
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,
         callbackURL: `${config.server.domen}:${config.server.port}/auth/facebook/callback`,
-        profileFields: ['id', 'displayName', 'photos', 'email']
+        profileFields: ['id', 'displayName', 'photos', 'email', 'link']
     },
     function(accessToken, refreshToken, profile, cb) {
+    console.log(profile);
         return cb(null, profile);
         // User.findOrCreate({ facebookId: profile.id }, function (err, user) {
         //     return cb(err, user);
@@ -100,8 +101,9 @@ router
         if(ctx.isAuthenticated()) {
             let user = ctx.state.user;
             let photo = user && user.photos && user.photos[0] && user.photos[0].value;
-            let name = user && user.displayName || "not name";
-            ctx.body = {name, photo};
+            let userName = user && user.displayName || null;
+            let link = user && user._json.link || null;
+            ctx.body = {userName, photo, link};
         } else {
             ctx.body = {error : "not authentificate"};
         }
@@ -124,7 +126,7 @@ let addedUser = false;
 let SavedUserData = {};
 
 io.use(async function ( ctx, next ) {
-    console.log(ctx)
+    // console.log(ctx)
     await next()
 });
 
@@ -173,9 +175,9 @@ io.on('add user', (ctx, userData) => {
     ++numUsers;
     addedUser = true;
 
-    ctx.socket.emit('login', {
-        numUsers: numUsers
-    });
+    // ctx.socket.emit('login', {
+    //     numUsers: numUsers
+    // });
 
     io.broadcast('user joined', {
         userData: SavedUserData[ctx.socket.id],

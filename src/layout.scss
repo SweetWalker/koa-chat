@@ -23,6 +23,8 @@
 }
 
 .browser .header {
+  display: flex;
+  align-items: center;
   background: #E8E8E8;
   border-radius: 4px 4px 0 0;
   padding-bottom: 3px;
@@ -181,4 +183,13 @@ p {
   margin-right: 10px;
   border-radius: 50%;
   border: 1px solid #fff;
+}
+.username-link {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  text-decoration: none;
+}
+.countpeople {
+  margin-left: auto;
 }
