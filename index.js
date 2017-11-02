@@ -7,19 +7,21 @@ import config from './config';
 import passport from 'koa-passport';
 import FacebookStrategy from 'passport-facebook'
 import session from 'koa-session';
-
+import bodyParser from 'koa-bodyparser';
 
 const app = new Koa();
 const io = new IO();
+// const io = new IO("3000",{parser: parser});
 const router = new Router();
 
 
 
-
 app.keys = [config.server.sessionKey];
+app.use(bodyParser());
 app.use(serve('static'));
 
 app.use(session({}, app));
+
 
 passport.serializeUser(function (user, done) {
     // console.log("serializeUser", user);
@@ -49,7 +51,6 @@ passport.use(new FacebookStrategy({
 app.use(passport.initialize()); // сначала passport
 app.use(passport.session()); // сначала passport
 app.use(router.routes()); // потом маршруты
-
 
 
 io.attach(app);
@@ -123,6 +124,7 @@ let addedUser = false;
 let SavedUserData = {};
 
 io.use(async function ( ctx, next ) {
+    console.log(ctx)
     await next()
 });
 
@@ -131,6 +133,7 @@ io.on('connection', ctx => {
 });
 
 io.on('new message', (ctx, data) => {
+    console.log('new message');
     console.log(SavedUserData[ctx.socket.id]);
     // io.broadcast('new message', {
     //   userData: SavedUserData[ctx.socket.id],
@@ -154,13 +157,13 @@ io.on('stop typing', (ctx, userData) => {
 });
 
 io.on('disconnect', (ctx) => {
-    if (addedUser) {
+    // if (addedUser) {
         --numUsers;
         io.broadcast('user left', {
             userData: SavedUserData[ctx.socket.id],
             numUsers: numUsers
         });
-    }
+    // }
 });
 
 io.on('add user', (ctx, userData) => {
@@ -171,12 +174,12 @@ io.on('add user', (ctx, userData) => {
     addedUser = true;
 
     ctx.socket.emit('login', {
-      numUsers: numUsers
+        numUsers: numUsers
     });
 
     io.broadcast('user joined', {
         userData: SavedUserData[ctx.socket.id],
-      numUsers: numUsers
+        numUsers: numUsers
     });
 });
 

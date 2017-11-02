@@ -8,7 +8,8 @@
   "scripts": {
     "start": "pm2 start index.js --interpreter node_modules/babel-cli/bin/babel-node.js --name 'koa'",
     "launch": "nodemon index --exec babel-node",
-    "clear": "lsof -i TCP:3000 | grep LISTEN | awk '{print $2}' | xargs kill -9"
+    "clear": "lsof -i TCP:3000 | grep LISTEN | awk '{print $2}' | xargs kill -9",
+    "build": "webpack"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -20,6 +21,7 @@
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
     "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
     "koa-passport": "^4.0.1",
     "koa-router": "^7.2.1",
     "koa-send": "^4.1.1",

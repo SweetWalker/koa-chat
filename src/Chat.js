@@ -25,8 +25,11 @@ export default class Chat extends Component {
             listTyping: []
         };
 
-        this.socket = io('http://localhost:3000'),
-        this.getUserData();
+        this.socket = io('http://localhost:3000');
+
+        this.socket.on("connect", () => this.getUserData() );
+
+
     }
 
     setSocket = () => {
@@ -50,18 +53,21 @@ export default class Chat extends Component {
         });
 
         this.socket.on('user joined', function (data) {
-            console.log(data.userName + ' joined');
+            console.log(data.userData.userName + ' joined');
             // addParticipantsMessage(data);
         });
 
         this.socket.on('new message', function (data) {
-            console.log("new message", data);
+            // console.log("new message", data);
             self.newMessage(data);
         });
     }
 
     addChatTyping(name){
         // console.log("typing: ", name);
+        if(name === this.state.userName){
+            return;
+        }
         let isExistInList = this.state.listTyping.filter(item => item === name).length;
         if(isExistInList){
             return;
@@ -131,18 +137,19 @@ export default class Chat extends Component {
             method: "GET",
             credentials: 'include'
         };
-        let userData,
-            self = this;
+        let self = this;
 
         fetch("/userData",options)
             .then(data => data.json())
             .then(data => {
-                userData = {userName: data.name, photo: data.photo};
+                let userData = {userName: data.name, photo: data.photo};
                 self.setState(userData);
                 self.setSocket();
-                self.socket.emit('add user',userData);
+                self.socket.emit('add user', userData);
             })
             .catch(error => console.error(error));
+
+
     }
 
     render(){
@@ -166,7 +173,6 @@ export default class Chat extends Component {
         {this.state.messages.length && this.state.messages.map((item, index)=><MessageItem key={index} item={item}/>) || null}
 
         {this.state.listTyping.length && <TypingList list={this.state.listTyping} /> || null}
-        {/*{this.state.listTyping.length && this.state.listTyping.map((item, index)=><MessageItem key={index} item={item}/>)}*/}
 
                                 </div>
                                 <div className="message-input-container">
