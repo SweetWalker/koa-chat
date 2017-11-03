@@ -186,4 +186,4 @@ io.on('add user', (ctx, userData) => {
 });
 
 
-app.listen(3000);
+app.listen(3000, `${config.server.domen}`,);

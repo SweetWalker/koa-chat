@@ -1,6 +1,8 @@
 export default {
     server : {
-        domen : "http://localhost",
+        domen : "localhost",
+        // domen : "10.10.60.130",
+        // domen : "chathell.com",
         port : 3000,
         sessionKey : 'your-session-secret'
     },
