@@ -154,7 +154,23 @@ p {
 .message {
   display: flex;
   padding: 5px;
+  //transform: translateX(-100%);
+  //transition-duration: 0.5s;
+  opacity: 1;
+  animation: mymove 0.2s linear;
 }
+
+@keyframes mymove {
+  from {
+    transform: translateX(-100%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .message-name {
   padding: 0 3px;
   margin-top: 5px;

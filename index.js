@@ -15,7 +15,6 @@ const io = new IO();
 const router = new Router();
 
 
-
 app.keys = [config.server.sessionKey];
 app.use(bodyParser());
 app.use(serve('static'));
@@ -36,7 +35,7 @@ passport.deserializeUser(async function (user, done) {
 passport.use(new FacebookStrategy({
         clientID: config.auth.facebook.clientID,
         clientSecret: config.auth.facebook.clientSecret,
-        callbackURL: `${config.server.domen}:${config.server.port}/auth/facebook/callback`,
+        callbackURL: `http://${config.server.domen}:${config.server.port}/auth/facebook/callback`,
         profileFields: ['id', 'displayName', 'photos', 'email', 'link']
     },
     function(accessToken, refreshToken, profile, cb) {
@@ -137,11 +136,11 @@ io.on('connection', ctx => {
 io.on('new message', (ctx, data) => {
     console.log('new message');
     console.log(SavedUserData[ctx.socket.id]);
-    // io.broadcast('new message', {
-    //   userData: SavedUserData[ctx.socket.id],
-    //   message: data
-    // });
-    io.broadcast('new message', data);
+    io.broadcast('new message', {
+      userData: SavedUserData[ctx.socket.id],
+      message: data
+    });
+    // io.broadcast('new message', data);
 });
 
 io.on('typing', (ctx, userData) => {

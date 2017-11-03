@@ -89,21 +89,19 @@ export default class Chat extends Component {
         let list = this.state.messages;
         list.push(item);
         this.setState({ messages: list});
+        this.scrollMessageToBottom();
+    }
+
+    scrollMessageToBottom = () => {
+        this.messages.scrollTop = this.messages.scrollHeight;
     }
 
     sendMessage = (e) => {
         let message = this.state.inputMesssage;
         if(e.keyCode == 13 && message){
-            let data = {
-                message,
-                userData: {
-                    userName: this.state.userName,
-                    photo: this.state.photo
-                }
-            }
-            this.socket.emit('new message', data);
+            this.socket.emit('new message', message);
             this.socket.emit('stop typing', this.state.userName);
-            console.log("sent Message: ", data);
+            console.log("sent Message: ", message);
             this.setState({inputMesssage: ""});
         }
     }
@@ -136,10 +134,10 @@ export default class Chat extends Component {
         fetch("/userData",options)
             .then(data => data.json())
             .then(userData => {
-                // let userData = {userName: data.name, photo: data.photo};
                 self.setState(userData);
                 self.setSocket();
-                self.socket.emit('add user', userData);
+                setTimeout( () => self.socket.emit('add user', userData), 200)
+
             })
             .catch(error => console.error(error));
 
@@ -163,7 +161,9 @@ export default class Chat extends Component {
                         <p>Welcome to the <b>Hell.Inc</b> chat <b>MOTHERFUCKER</b></p>
                         <div className="main-window">
                             <div className="chat-container">
-                                <div className="messages">
+                                <div className="messages"
+                                     ref={(messages) => { this.messages = messages; }}
+                                >
 
         {this.state.messages.length && this.state.messages.map((item, index)=><MessageItem key={index} item={item}/>) || null}
 

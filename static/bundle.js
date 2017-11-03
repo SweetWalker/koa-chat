@@ -24659,21 +24659,26 @@ var Chat = function (_Component) {
             var list = _this.state.messages;
             list.push(item);
             _this.setState({ messages: list });
+            _this.scrollMessageToBottom();
+        };
+
+        _this.scrollMessageToBottom = function () {
+            _this.messages.scrollTop = _this.messages.scrollHeight;
         };
 
         _this.sendMessage = function (e) {
             var message = _this.state.inputMesssage;
             if (e.keyCode == 13 && message) {
-                var data = {
-                    message: message,
-                    userData: {
-                        userName: _this.state.userName,
-                        photo: _this.state.photo
-                    }
-                };
-                _this.socket.emit('new message', data);
+                // let data = {
+                //     message,
+                //     userData: {
+                //         userName: this.state.userName,
+                //         photo: this.state.photo
+                //     }
+                // }
+                _this.socket.emit('new message', message);
                 _this.socket.emit('stop typing', _this.state.userName);
-                console.log("sent Message: ", data);
+                console.log("sent Message: ", message);
                 _this.setState({ inputMesssage: "" });
             }
         };
@@ -24706,10 +24711,11 @@ var Chat = function (_Component) {
             fetch("/userData", options).then(function (data) {
                 return data.json();
             }).then(function (userData) {
-                // let userData = {userName: data.name, photo: data.photo};
                 self.setState(userData);
                 self.setSocket();
-                self.socket.emit('add user', userData);
+                setTimeout(function () {
+                    return self.socket.emit('add user', userData);
+                }, 200);
             }).catch(function (error) {
                 return console.error(error);
             });
@@ -24760,6 +24766,8 @@ var Chat = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             return _react2.default.createElement(
                 'div',
                 { className: 'container' },
@@ -24819,7 +24827,11 @@ var Chat = function (_Component) {
                                 { className: 'chat-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { className: 'messages' },
+                                    { className: 'messages',
+                                        ref: function ref(messages) {
+                                            _this2.messages = messages;
+                                        }
+                                    },
                                     this.state.messages.length && this.state.messages.map(function (item, index) {
                                         return _react2.default.createElement(_MessageItem2.default, { key: index, item: item });
                                     }) || null,

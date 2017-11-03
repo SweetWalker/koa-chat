@@ -6,7 +6,6 @@
   "author": "SWalker",
   "license": "MIT",
   "scripts": {
-//    "start": "pm2 start index.js --interpreter node_modules/babel-cli/bin/babel-node.js --name 'koa'",
     "start": "nodemon index --exec babel-node",
     "clear": "lsof -i TCP:3000 | grep LISTEN | awk '{print $2}' | xargs kill -9",
     "build": "webpack"
